@@ -1,0 +1,1 @@
+"/Users/jobb/Projects/odoo17e/venv/bin/" python setup/odoo --config odoo.conf

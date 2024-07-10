@@ -22,3 +22,13 @@ python build/scripts-3.12/odoo -r openpg -w openpgpwd
 * `scripts-3.12` อ้างอิงจากใน Folder Build
 * โดย Options `-r` จะเป็นชื่อผู้ใช้ฐานข้อมูล
 * ส่วน `-w` คือรหัสผ่านฐานข้อมูล PostgreSQL
+
+5. รัน odoo
+* Windows
+```bash
+   run.bat 
+```
+* MacOs
+```bash
+    ./run.sh
+```

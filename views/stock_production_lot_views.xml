@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_lot_form_qr_code" model="ir.ui.view">
+        <field name="name">stock.lot.form.qr</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group>
+                    <field name="qr_code" widget="image" class="oe_avatar" options="{'size': (128, 128)}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

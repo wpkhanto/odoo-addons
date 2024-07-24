@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_crm_lead_form_geo" model="ir.ui.view">
+        <field name="name">crm.lead.form.geo</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet//group" position="inside">
+                <group>
+                    <field name="latitude" digits="[12, 7]" readonly="1"/>
+                    <field name="longitude" digits="[12, 7]" readonly="1"/>
+                    <button name="get_geo_location" string="Get Location" type="object" class="oe_highlight"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,29 @@
+<!-- views/crm_lead_views.xml -->
+<odoo>
+    <data>
+        <template id="crm_lead_geolocation_template" name="Geolocation Button">
+            <t t-name="crm_lead_geolocation.GeolocationButton">
+                <button type="button" t-on-click="getGeolocation" class="oe_highlight">
+                    Get Current Location
+                </button>
+            </t>
+        </template>
+
+        <record id="view_crm_lead_form_geolocation" model="ir.ui.view">
+            <field name="name">crm.lead.form.geolocation</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet//group" position="inside">
+                    <group name="geolocation">
+                        <field name="latitude"/>
+                        <field name="longitude"/>
+                        <div class="oe_button_get_geolocation">
+                            <!-- Call OWL component in JS -->
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -14,7 +14,9 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'crm_lead_geo_location/static/src/components/*'
+            'crm_lead_geo_location/static/src/components/*',
+            'https://unpkg.com/leaflet/dist/leaflet.css',  # Leaflet CSS
+            'https://unpkg.com/leaflet/dist/leaflet.js',   # Leaflet JS
         ]
     },
 }

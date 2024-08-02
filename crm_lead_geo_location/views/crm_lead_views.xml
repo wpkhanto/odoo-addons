@@ -13,6 +13,9 @@
                     <field name="latitude" readonly="0" class="latitude"/>
                     <field name="longitude" readonly="0" class="longitude"/>
                 </group>
+                <group>
+                    <div id="map" style="height: 200px; width: 400px; position: relative; outline-style: none;"></div>
+                </group>
             </xpath>
             <xpath expr="//form" position="attributes">
                 <attribute name="js_class">crm_lead_geo_location</attribute>

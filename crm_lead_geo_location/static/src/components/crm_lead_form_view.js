@@ -10,28 +10,18 @@ class CrmLeadFormController extends FormController {
     setup() {
         console.log("CRM Lead form inherited!")
         super.setup()
-        // console.log(this.state);
-        // console.log(Object.assign({}, this.model));
-        // console.log(this.model.root.data.stage_id[1]);
 
         this.notification = useService("notification");
 
+        // Set a default to Bangkok location.
+        this.maps = { latitude: 13.750000, longitude: 100.517000 };
+        this.mapInstance = null;
+
         onMounted(() => {
             this._registerEventListeners();
-            this.disableFields();
+            this._disableFields();
+            this._onLoadMap(this.model.root.data.latitude, this.model.root.data.longitude);
         });
-
-        // useEffect(() => {
-        //     console.log(this)
-        //     this.getLocation();
-        // }, () => [])
-    }
-
-    _registerEventListeners() {
-        const button = document.querySelector('button[name="get_geo_location"]');
-        if (button) {
-            button.addEventListener('click', this.getLocation.bind(this));
-        }
     }
 
     getLocation() {
@@ -48,7 +38,6 @@ class CrmLeadFormController extends FormController {
                 // console.log(`Latitude : ${crd.latitude}`);
                 // console.log(`Longitude : ${crd.longitude}`);
                 // console.log(`More or less ${crd.accuracy} meters.`);
-                console.log(`lat, lng : ${crd.latitude}, ${crd.longitude}`);
 
                 this._updateLeadLocation(crd.latitude, crd.longitude);
             }
@@ -62,9 +51,36 @@ class CrmLeadFormController extends FormController {
         return;
     }
 
+    _onLoadMap(latitude, longitude) {
+        if (this._isValid(latitude)) { 
+            this.maps.latitude = parseFloat(latitude); 
+        }
+        if (this._isValid(longitude)) { 
+            this.maps.longitude = parseFloat(longitude); 
+        }
+
+        this._initializeMap(this.maps.latitude, this.maps.longitude);
+    }
+
+    _initializeMap(latitude, longitude) {
+        const mapContainer = document.getElementById('map');
+        if (mapContainer) {
+            // Check if map instance already exists and remove it
+            if (this.mapInstance) {
+                this.mapInstance.remove();
+            }
+
+            // Initialize the new map instance
+            this.mapInstance = L.map('map').setView([latitude, longitude], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(this.mapInstance);
+    
+            L.marker([latitude, longitude]).addTo(this.mapInstance).bindPopup('Location').openPopup();
+        }
+    }
+
     async _updateLeadLocation(latitude, longitude) {
-
-
         // Get [id] from crm.lead
         const record = this.model.root.evalContext;
         const leadId = record.active_id;
@@ -104,7 +120,8 @@ class CrmLeadFormController extends FormController {
             const result = await response.json();
             if (result.result) {
                 // Update the fields in the form.
-                this.updateFields(latitude, longitude);
+                this._updateFields(latitude, longitude);
+                this._onLoadMap(latitude, longitude);
 
                 this.notification.add("Lead location updated successfully", {
                     type: "success",
@@ -123,7 +140,14 @@ class CrmLeadFormController extends FormController {
         }
     }
 
-    updateFields(latitude, longitude) {
+    _registerEventListeners() {
+        const button = document.querySelector('button[name="get_geo_location"]');
+        if (button) {
+            button.addEventListener('click', this.getLocation.bind(this));
+        }
+    }
+
+    _updateFields(latitude, longitude) {
         // Fack bind data this field.
         // Data on this field did not saved.
         const latField = document.querySelector('.latitude input');
@@ -132,11 +156,15 @@ class CrmLeadFormController extends FormController {
         if (lonField) { lonField.value = longitude; lonField.setAttribute("disabled", 1); }
     }
 
-    disableFields() {
+    _disableFields() {
         const latField = document.querySelector('.latitude input');
         const lonField = document.querySelector('.longitude input');
         if (latField) { latField.setAttribute("disabled", 1); }
         if (lonField) { lonField.setAttribute("disabled", 1); }
+    }
+
+    _isValid(value) {
+        return value !== "" && value !== null && value !== undefined;
     }
 }
 
